@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-blizzer-dev-02848-authRole",
+      "UnauthRoleArn": "arn:aws:iam::770966692319:role/amplify-blizzer-dev-02848-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::770966692319:role/amplify-blizzer-dev-02848-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-blizzer-dev-02848-deployment",
+      "UnauthRoleName": "amplify-blizzer-dev-02848-unauthRole",
+      "StackName": "amplify-blizzer-dev-02848",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:770966692319:stack/amplify-blizzer-dev-02848/46fc6f70-f963-11ec-8d2b-0a99b7272bbc",
+      "AmplifyAppId": "d2g4es7vepyfhe"
+    },
+    "categories": {
+      "auth": {
+        "blizzere89c5cca": {}
+      }
+    }
+  }
+}

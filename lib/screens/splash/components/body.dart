@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:blizzer/constants.dart';
-import 'package:blizzer/screens/home/home_screen.dart';
 import 'package:blizzer/screens/sign_in/sign_in_screen.dart';
 import 'package:blizzer/size_config.dart';
 

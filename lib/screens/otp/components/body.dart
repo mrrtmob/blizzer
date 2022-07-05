@@ -4,9 +4,17 @@ import 'package:blizzer/size_config.dart';
 
 import 'otp_form.dart';
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  
+    @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    
     return SizedBox(
       width: double.infinity,
       child: Padding(
@@ -20,9 +28,9 @@ class Body extends StatelessWidget {
                 "OTP Verification",
                 style: headingStyle,
               ),
-              Text("We sent your code to +1 898 860 ***"),
+              Text("We sent your code to ${arguments['email']}"),
               buildTimer(),
-              OtpForm(),
+              OtpForm(email: arguments['email'],),
               SizedBox(height: SizeConfig.screenHeight * 0.1),
               GestureDetector(
                 onTap: () {
@@ -56,4 +64,10 @@ class Body extends StatelessWidget {
       ],
     );
   }
+}
+class ScreenArguments {
+  final String email;
+  
+
+  ScreenArguments(this.email);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:blizzer/size_config.dart';
 
+const String url = "http://192.168.1.11:8000";
 const kPrimaryColor = Color(0xFFFaa2d15);
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
@@ -33,6 +34,7 @@ const String kMatchPassError = "Passwords don't match";
 const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
+const String kEmailAlreadyExist = "Email already exists";
 
 final otpInputDecoration = InputDecoration(
   contentPadding:

@@ -1,12 +1,18 @@
+import 'package:blizzer/auth/signin_api.dart';
+import 'package:blizzer/screens/home/home_screen.dart';
+import 'package:blizzer/auth/sign_out.dart';
 import 'package:flutter/material.dart';
 import 'package:blizzer/components/custom_surfix_icon.dart';
 import 'package:blizzer/components/form_error.dart';
 import 'package:blizzer/helper/keyboard.dart';
 import 'package:blizzer/screens/forgot_password/forgot_password_screen.dart';
 import 'package:blizzer/screens/login_success/login_success_screen.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/route_manager.dart';
 
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
+import '../../../components/show_dialog.dart';
 import '../../../size_config.dart';
 
 class SignForm extends StatefulWidget {
@@ -16,8 +22,8 @@ class SignForm extends StatefulWidget {
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
+  String email = "";
+  String password = "";
   bool? remember = false;
   final List<String?> errors = [];
 
@@ -35,8 +41,10 @@ class _SignFormState extends State<SignForm> {
       });
   }
 
+  final storage = FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
+    
     return Form(
       key: _formKey,
       child: Column(
@@ -71,16 +79,27 @@ class _SignFormState extends State<SignForm> {
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
           DefaultButton(
-            text: "Continue",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-              }
-            },
-          ),
+              text: "Sign In",
+              press: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  // if all are valid then go to success screen
+                  KeyboardUtil.hideKeyboard(context);
+                  showLoaderDialog(context,"Signing in...");
+                  signin(email, password).then((value) {
+                    Navigator.pop(context);
+                    print(value);
+                    if (value) {
+                      Navigator.popAndPushNamed(context, HomeScreen.routeName);
+                    } else {
+                      addError(error: kInvalidEmailError);
+                    }
+                  });
+                  // Future.delayed(Duration(milliseconds: 2000))
+                  //     .then((value) => Navigator.pop(context));
+                  //signOutCurrentUser();
+                }
+              }),
         ],
       ),
     );
@@ -89,7 +108,7 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
+      onSaved: (newValue) => password = newValue!,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kPassNullError);
@@ -112,8 +131,7 @@ class _SignFormState extends State<SignForm> {
         labelStyle: TextStyle(color: kTextColor),
         labelText: "Password",
         hintText: "Enter your password",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
+        
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Lock.svg"),
       ),
@@ -123,7 +141,7 @@ class _SignFormState extends State<SignForm> {
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
+      onSaved: (newValue) => email = newValue!,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kEmailNullError);
@@ -146,8 +164,7 @@ class _SignFormState extends State<SignForm> {
         labelStyle: TextStyle(color: kTextColor),
         labelText: "Email",
         hintText: "Enter your email",
-        // If  you are using latest version of flutter then lable text and hint text shown like this
-        // if you r using flutter less then 1.20.* then maybe this is not working properly
+        
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
       ),
