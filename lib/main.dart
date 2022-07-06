@@ -1,7 +1,5 @@
 import 'package:blizzer/admin/admin_screen/upload/admin_upload_screen.dart';
 import 'package:blizzer/configureAmplify.dart';
-import 'package:blizzer/screens/sign_in/sign_in_screen.dart';
-import 'package:blizzer/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:blizzer/routes.dart';
 import 'package:blizzer/theme.dart';
