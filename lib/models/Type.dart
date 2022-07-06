@@ -17,19 +17,22 @@
 // Generated files can be excluded from analysis in analysis_options.yaml
 // For more info, see: https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis
 
-// ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
+// ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Todo type in your schema. */
+/** This is an auto generated class representing the Type type in your schema. */
 @immutable
-class Todo extends Model {
-  static const classType = const _TodoModelType();
+class Type extends Model {
+  static const classType = const _TypeModelType();
   final String id;
   final String? _name;
-  final String? _description;
+  final String? _imageUrl;
+  final List<ItemType>? _items;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -54,8 +57,21 @@ class Todo extends Model {
     }
   }
   
-  String? get description {
-    return _description;
+  String get imageUrl {
+    try {
+      return _imageUrl!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  List<ItemType>? get items {
+    return _items;
   }
   
   TemporalDateTime? get createdAt {
@@ -66,13 +82,14 @@ class Todo extends Model {
     return _updatedAt;
   }
   
-  const Todo._internal({required this.id, required name, description, createdAt, updatedAt}): _name = name, _description = description, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Type._internal({required this.id, required name, required imageUrl, items, createdAt, updatedAt}): _name = name, _imageUrl = imageUrl, _items = items, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Todo({String? id, required String name, String? description}) {
-    return Todo._internal(
+  factory Type({String? id, required String name, required String imageUrl, List<ItemType>? items}) {
+    return Type._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
-      description: description);
+      imageUrl: imageUrl,
+      items: items != null ? List<ItemType>.unmodifiable(items) : items);
   }
   
   bool equals(Object other) {
@@ -82,10 +99,11 @@ class Todo extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Todo &&
+    return other is Type &&
       id == other.id &&
       _name == other._name &&
-      _description == other._description;
+      _imageUrl == other._imageUrl &&
+      DeepCollectionEquality().equals(_items, other._items);
   }
   
   @override
@@ -95,10 +113,10 @@ class Todo extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Todo {");
+    buffer.write("Type {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
-    buffer.write("description=" + "$_description" + ", ");
+    buffer.write("imageUrl=" + "$_imageUrl" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -106,37 +124,44 @@ class Todo extends Model {
     return buffer.toString();
   }
   
-  Todo copyWith({String? id, String? name, String? description}) {
-    return Todo._internal(
+  Type copyWith({String? id, String? name, String? imageUrl, List<ItemType>? items}) {
+    return Type._internal(
       id: id ?? this.id,
       name: name ?? this.name,
-      description: description ?? this.description);
+      imageUrl: imageUrl ?? this.imageUrl,
+      items: items ?? this.items);
   }
   
-  Todo.fromJson(Map<String, dynamic> json)  
+  Type.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _name = json['name'],
-      _description = json['description'],
+      _imageUrl = json['imageUrl'],
+      _items = json['items'] is List
+        ? (json['items'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => ItemType.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'description': _description, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'imageUrl': _imageUrl, 'items': _items?.map((ItemType? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "todo.id");
+  static final QueryField ID = QueryField(fieldName: "type.id");
   static final QueryField NAME = QueryField(fieldName: "name");
-  static final QueryField DESCRIPTION = QueryField(fieldName: "description");
+  static final QueryField IMAGEURL = QueryField(fieldName: "imageUrl");
+  static final QueryField ITEMS = QueryField(
+    fieldName: "items",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ItemType).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Todo";
-    modelSchemaDefinition.pluralName = "Todos";
+    modelSchemaDefinition.name = "Type";
+    modelSchemaDefinition.pluralName = "Types";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.OWNER,
-        ownerField: "owner",
-        identityClaim: "cognito:username",
-        provider: AuthRuleProvider.USERPOOLS,
+        authStrategy: AuthStrategy.PUBLIC,
         operations: [
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
@@ -148,15 +173,22 @@ class Todo extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Todo.NAME,
+      key: Type.NAME,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Todo.DESCRIPTION,
-      isRequired: false,
+      key: Type.IMAGEURL,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Type.ITEMS,
+      isRequired: false,
+      ofModelName: (ItemType).toString(),
+      associatedKey: ItemType.TYPE
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -175,11 +207,11 @@ class Todo extends Model {
   });
 }
 
-class _TodoModelType extends ModelType<Todo> {
-  const _TodoModelType();
+class _TypeModelType extends ModelType<Type> {
+  const _TypeModelType();
   
   @override
-  Todo fromJson(Map<String, dynamic> jsonData) {
-    return Todo.fromJson(jsonData);
+  Type fromJson(Map<String, dynamic> jsonData) {
+    return Type.fromJson(jsonData);
   }
 }

@@ -4,7 +4,6 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:blizzer/auth/current_user.dart';
 import 'package:blizzer/constants.dart';
-import 'package:blizzer/models/ModelProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -65,14 +64,10 @@ class _UploadState extends State<Upload> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image(
-              width: 1000,
-              height: 500,
-              fit: BoxFit.cover,
-              image: NetworkImage("")),
+          
           ElevatedButton(
               onPressed: () async {
-                getDownloadUrl();
+                //getDownloadUrl();
               },
               child: Text("Upload")),
         ],
@@ -81,19 +76,4 @@ class _UploadState extends State<Upload> {
   }
 }
 
-Future<void> createTodo() async {
-  try {
-    final todo = Todo(name: 'my first todo', description: 'todo description');
-    final request = ModelMutations.create(todo);
-    final response = await Amplify.API.mutate(request: request).response;
 
-    final createdTodo = response.data;
-    if (createdTodo == null) {
-      print('errors: ${response.errors}');
-      return;
-    }
-    print('Mutation result: ${createdTodo.name}');
-  } on ApiException catch (e) {
-    print('Mutation failed: $e');
-  }
-}

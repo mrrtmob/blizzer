@@ -37,6 +37,7 @@ dependencies:
   amplify_api: ^0.6.0
   amplify_storage_s3: ^0.6.0
   image_picker: ^0.8.5+3
+  filter_list: ^1.0.2
   
 
 dev_dependencies:

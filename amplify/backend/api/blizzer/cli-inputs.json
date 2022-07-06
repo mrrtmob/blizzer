@@ -3,16 +3,21 @@
   "serviceConfiguration": {
     "apiName": "blizzer",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/home/tmob/Desktop/Flutter/blizzer/amplify/backend/api/blizzer/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-12d53692-fc01-4f13-8dfc-8328c88b05b7/amplify/backend/api/blizzer/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "expirationTime": 7
+      "keyDescription": "api key description",
+      "expirationTime": 30
     },
     "additionalAuthTypes": [
       {
-        "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authblizzere89c5cca"
+        "mode": "AWS_IAM"
       }
-    ]
+    ],
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "AUTOMERGE"
+      }
+    }
   }
 }

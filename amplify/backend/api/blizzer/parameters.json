@@ -2,10 +2,5 @@
   "AppSyncApiName": "blizzer",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
-  "AuthCognitoUserPoolId": {
-    "Fn::GetAtt": [
-      "authblizzere89c5cca",
-      "Outputs.UserPoolId"
-    ]
-  }
+  "AuthModeLastUpdated": "2022-07-04T13:39:30.329Z"
 }

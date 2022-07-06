@@ -1,3 +1,4 @@
+import 'package:blizzer/admin/admin_screen/upload/admin_upload_screen.dart';
 import 'package:blizzer/configureAmplify.dart';
 import 'package:blizzer/screens/sign_in/sign_in_screen.dart';
 import 'package:blizzer/size_config.dart';
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Blizzer',
       theme: theme(),
-      initialRoute: "upload",
+      initialRoute: AdminUploadScreen.routeName,
       routes: routes,
     );
   }

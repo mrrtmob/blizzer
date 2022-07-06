@@ -1,3 +1,4 @@
+import 'package:blizzer/admin/admin_screen/upload/admin_upload_screen.dart';
 import 'package:blizzer/laoding.dart';
 import 'package:blizzer/upload.dart';
 import 'package:flutter/widgets.dart';
@@ -30,4 +31,5 @@ final Map<String, WidgetBuilder> routes = {
   ProfileScreen.routeName: (context) => ProfileScreen(),
   "loading" :(context) => Loading(),
   "upload" : (context) => const Upload(),
+  AdminUploadScreen.routeName: (context) => AdminUploadScreen(),
 };
