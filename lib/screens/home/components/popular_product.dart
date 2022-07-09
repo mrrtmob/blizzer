@@ -19,27 +19,21 @@ class _PopularProductsState extends State<PopularProducts> {
   @override
   void initState() {
     // TODO: implement initState
+
+    super.initState();
     queryItems().then((value) {
       items = value;
       print(items);
+    }).then((value) {
+      setState(() {});
     });
-    super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(
-            onPressed: () {
-              queryItems().then((value) {
-                items = value;
-                print(items);
-                setState(() {});
-              });
-            },
-            child: Text("hello")),
+        
         Padding(
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
@@ -60,21 +54,29 @@ class _PopularProductsState extends State<PopularProducts> {
               //         .shrink(); // here by default width and height is 0
               //   },
               // ),
-              
               items.isNotEmpty
-                  ? ProductCard(
-                      product: Product(
-                          colors: [
-                            Color(0xFFF6625E),
-                            Color(0xFF836DB8),
-                            Color(0xFFDECB9C),
-                            Colors.white,
-                          ],
-                          description: items[0]!.description.toString(),
-                          id: 2,
-                          images: items[0]!.imageUrl,
-                          price: items[0]!.price,
-                          title: items[0]!.productName))
+                  ? Container(
+                    height: 225,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return ProductCard(
+                              product: Product(
+                                  colors: [
+                                Color(0xFFF6625E),
+                                Color(0xFF836DB8),
+                                Color(0xFFDECB9C),
+                                Colors.white,
+                              ],
+                                  description: items[index]!.description.toString(),
+                                  id: index,
+                                  images: items[index]!.imageUrl,
+                                  price: items[index]!.price,
+                                  title: items[index]!.productName));
+                        }),
+                  )
                   : CircularProgressIndicator(),
               SizedBox(width: getProportionateScreenWidth(18)),
             ],

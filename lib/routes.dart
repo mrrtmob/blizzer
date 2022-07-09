@@ -28,6 +28,6 @@ final Map<String, WidgetBuilder> routes = {
   DetailsScreen.routeName: (context) => DetailsScreen(),
   CartScreen.routeName: (context) => CartScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
-  "loading" :(context) => Loading(),
+  Loading.routeName :(context) => Loading(),
   AdminUploadScreen.routeName: (context) => AdminUploadScreen(),
 };

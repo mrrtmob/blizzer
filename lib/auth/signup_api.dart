@@ -7,7 +7,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
       final userAttributes = <CognitoUserAttributeKey, String>{
         CognitoUserAttributeKey.preferredUsername:email,
         CognitoUserAttributeKey.email: email,
-        CognitoUserAttributeKey.custom('role') : 'admin'
       };
      var result =  await Amplify.Auth.signUp(
         username: email,
