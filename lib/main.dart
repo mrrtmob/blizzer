@@ -1,5 +1,6 @@
 import 'package:blizzer/admin/admin_screen/upload/admin_upload_screen.dart';
 import 'package:blizzer/configureAmplify.dart';
+import 'package:blizzer/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:blizzer/routes.dart';
 import 'package:blizzer/theme.dart';
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Blizzer',
       theme: theme(),
-      initialRoute: AdminUploadScreen.routeName,
+      initialRoute: HomeScreen.routeName,
       routes: routes,
     );
   }

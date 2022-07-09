@@ -19,9 +19,7 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -30,9 +28,8 @@ import 'package:flutter/foundation.dart';
 class Type extends Model {
   static const classType = const _TypeModelType();
   final String id;
-  final String? _name;
+  final String? _typeName;
   final String? _imageUrl;
-  final List<ItemType>? _items;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -44,9 +41,9 @@ class Type extends Model {
     return id;
   }
   
-  String get name {
+  String get typeName {
     try {
-      return _name!;
+      return _typeName!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -70,10 +67,6 @@ class Type extends Model {
     }
   }
   
-  List<ItemType>? get items {
-    return _items;
-  }
-  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -82,14 +75,13 @@ class Type extends Model {
     return _updatedAt;
   }
   
-  const Type._internal({required this.id, required name, required imageUrl, items, createdAt, updatedAt}): _name = name, _imageUrl = imageUrl, _items = items, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Type._internal({required this.id, required typeName, required imageUrl, createdAt, updatedAt}): _typeName = typeName, _imageUrl = imageUrl, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Type({String? id, required String name, required String imageUrl, List<ItemType>? items}) {
+  factory Type({String? id, required String typeName, required String imageUrl}) {
     return Type._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name,
-      imageUrl: imageUrl,
-      items: items != null ? List<ItemType>.unmodifiable(items) : items);
+      typeName: typeName,
+      imageUrl: imageUrl);
   }
   
   bool equals(Object other) {
@@ -101,9 +93,8 @@ class Type extends Model {
     if (identical(other, this)) return true;
     return other is Type &&
       id == other.id &&
-      _name == other._name &&
-      _imageUrl == other._imageUrl &&
-      DeepCollectionEquality().equals(_items, other._items);
+      _typeName == other._typeName &&
+      _imageUrl == other._imageUrl;
   }
   
   @override
@@ -115,7 +106,7 @@ class Type extends Model {
     
     buffer.write("Type {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("typeName=" + "$_typeName" + ", ");
     buffer.write("imageUrl=" + "$_imageUrl" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
@@ -124,37 +115,27 @@ class Type extends Model {
     return buffer.toString();
   }
   
-  Type copyWith({String? id, String? name, String? imageUrl, List<ItemType>? items}) {
+  Type copyWith({String? id, String? typeName, String? imageUrl}) {
     return Type._internal(
       id: id ?? this.id,
-      name: name ?? this.name,
-      imageUrl: imageUrl ?? this.imageUrl,
-      items: items ?? this.items);
+      typeName: typeName ?? this.typeName,
+      imageUrl: imageUrl ?? this.imageUrl);
   }
   
   Type.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _name = json['name'],
+      _typeName = json['typeName'],
       _imageUrl = json['imageUrl'],
-      _items = json['items'] is List
-        ? (json['items'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => ItemType.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'imageUrl': _imageUrl, 'items': _items?.map((ItemType? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'typeName': _typeName, 'imageUrl': _imageUrl, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "type.id");
-  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField TYPENAME = QueryField(fieldName: "typeName");
   static final QueryField IMAGEURL = QueryField(fieldName: "imageUrl");
-  static final QueryField ITEMS = QueryField(
-    fieldName: "items",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ItemType).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Type";
     modelSchemaDefinition.pluralName = "Types";
@@ -173,7 +154,7 @@ class Type extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Type.NAME,
+      key: Type.TYPENAME,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -182,13 +163,6 @@ class Type extends Model {
       key: Type.IMAGEURL,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Type.ITEMS,
-      isRequired: false,
-      ofModelName: (ItemType).toString(),
-      associatedKey: ItemType.TYPE
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

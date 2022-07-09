@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:blizzer/components/rounded_icon_btn.dart';
-import 'package:blizzer/models/Product.dart';
+import 'package:blizzer/models/ProductModel.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';

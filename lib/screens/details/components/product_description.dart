@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:blizzer/models/Product.dart';
+import 'package:blizzer/models/ProductModel.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';

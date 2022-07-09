@@ -1,6 +1,5 @@
 import 'package:blizzer/admin/admin_screen/upload/admin_upload_screen.dart';
 import 'package:blizzer/laoding.dart';
-import 'package:blizzer/upload.dart';
 import 'package:flutter/widgets.dart';
 import 'package:blizzer/screens/cart/cart_screen.dart';
 import 'package:blizzer/screens/complete_profile/complete_profile_screen.dart';
@@ -30,6 +29,5 @@ final Map<String, WidgetBuilder> routes = {
   CartScreen.routeName: (context) => CartScreen(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
   "loading" :(context) => Loading(),
-  "upload" : (context) => const Upload(),
   AdminUploadScreen.routeName: (context) => AdminUploadScreen(),
 };

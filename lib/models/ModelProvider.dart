@@ -21,20 +21,18 @@
 
 import 'package:amplify_core/amplify_core.dart';
 import 'Item.dart';
-import 'ItemType.dart';
 import 'Type.dart';
 import 'User.dart';
 
 export 'Item.dart';
-export 'ItemType.dart';
 export 'Type.dart';
 export 'User.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "0eaddbe5ccd3e4bbd4f9debff42ffe4b";
+  String version = "b8e165327f48b976d69c1f06df03483d";
   @override
-  List<ModelSchema> modelSchemas = [Item.schema, ItemType.schema, Type.schema, User.schema];
+  List<ModelSchema> modelSchemas = [Item.schema, Type.schema, User.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -45,8 +43,6 @@ class ModelProvider implements ModelProviderInterface {
     switch(modelName) {
       case "Item":
         return Item.classType;
-      case "ItemType":
-        return ItemType.classType;
       case "Type":
         return Type.classType;
       case "User":

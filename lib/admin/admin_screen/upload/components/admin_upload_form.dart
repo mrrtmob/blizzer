@@ -1,10 +1,15 @@
 import 'dart:io';
-
-import 'package:blizzer/admin/api/query/query_categories.dart';
+import 'package:blizzer/api/mutation/post_product.dart';
+import 'package:blizzer/api/query/query_categories.dart';
+import 'package:blizzer/api/upload_image.dart';
 import 'package:blizzer/components/custom_surfix_icon.dart';
 import 'package:blizzer/components/default_button.dart';
 import 'package:blizzer/components/form_error.dart';
+import 'package:blizzer/components/show_dialog.dart';
 import 'package:blizzer/constants.dart';
+
+import 'package:blizzer/models/ModelProvider.dart';
+import 'package:blizzer/screens/home/home_screen.dart';
 import 'package:blizzer/size_config.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
@@ -21,23 +26,11 @@ class UploadForm extends StatefulWidget {
 class _UploadFormState extends State<UploadForm> {
   List<XFile> _imageFileList = [];
 
-  List<Type> userList = [
-    Type(name: "Jon", imageUrl: ""),
-    Type(name: "Lindsey ", imageUrl: ""),
-    Type(name: "Valarie ", imageUrl: ""),
-    Type(name: "Elyse ", imageUrl: ""),
-    Type(name: "Ethel ", imageUrl: ""),
-    Type(name: "Emelyan ", imageUrl: ""),
-    Type(name: "Catherine ", imageUrl: ""),
-    Type(name: "Stepanida  ", imageUrl: ""),
-    Type(name: "Carolina ", imageUrl: ""),
-    Type(name: "Nail  ", imageUrl: ""),
-    Type(name: "Kamil ", imageUrl: ""),
-    Type(name: "Mariana ", imageUrl: ""),
-    Type(name: "Katerina ", imageUrl: ""),
-  ];
+  List<Type?> categories = [];
+  List<Type>? selectCategories = [];
   final _formKey = GlobalKey<FormState>();
-  String itemName = "";
+  String productName = "";
+  double productPrice = 0.0;
   String description = "";
 
   final List<String?> errors = [];
@@ -66,7 +59,7 @@ class _UploadFormState extends State<UploadForm> {
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getProportionateScreenWidth(20)),
-              child: buildItemNameFormField(),
+              child: buildProductNameFormField(),
             ),
             SizedBox(height: getProportionateScreenHeight(30)),
             Padding(
@@ -92,7 +85,7 @@ class _UploadFormState extends State<UploadForm> {
               ),
             ),
             SizedBox(height: getProportionateScreenHeight(30)),
-            buildCategories(userList),
+            buildCategories(selectCategories),
             SizedBox(height: getProportionateScreenHeight(30)),
             buildImagePicker(_imageFileList),
             SizedBox(height: getProportionateScreenHeight(30)),
@@ -106,38 +99,55 @@ class _UploadFormState extends State<UploadForm> {
               padding: EdgeInsets.symmetric(
                   horizontal: getProportionateScreenWidth(20)),
               child: DefaultButton(
-                text: "Upload",
-                press: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                  }
-                },
-              ),
+                  text: "Upload",
+                  press: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      showLoaderDialog(context, "Uploading...");
+                      final key = DateTime.now().toString();
+                      uploadImage(key, _imageFileList).then((value) {
+                        createProduct(Item(
+                                productName: productName,
+                                price: productPrice,
+                                imageUrl: _imageFileList
+                                    .map((e) => key + e.name)
+                                    .toList(),
+                                userID: 'sdgsdgdsgdh',
+                                types: selectCategories!
+                                    .map((e) => e.id)
+                                    .toList()))
+                            .then((value) => Navigator.pop(context))
+                            .then((value) => Navigator.popAndPushNamed(
+                                context, HomeScreen.routeName));
+                                
+                      });
+                    }
+                  }),
             ),
           ],
         ));
   }
 
-  TextFormField buildItemNameFormField() {
+  TextFormField buildProductNameFormField() {
     return TextFormField(
       keyboardType: TextInputType.text,
-      onSaved: (newValue) => itemName = newValue!,
+      onSaved: (newValue) => productName = newValue!,
       onChanged: (value) {
         if (value.isNotEmpty) {
-          removeError(error: "Please Enter Item name");
+          removeError(error: "Please Enter Product name");
         }
         return null;
       },
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: "Please Enter Item name");
+          addError(error: "Please Enter Product name");
           return "";
         }
         return null;
       },
       decoration: InputDecoration(
-        labelText: "Item name*",
-        hintText: "Enter item name",
+        labelText: "Product name*",
+        hintText: "Enter Product name",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Cart Icon.svg"),
       ),
@@ -147,16 +157,16 @@ class _UploadFormState extends State<UploadForm> {
   TextFormField buildPriceFormField() {
     return TextFormField(
       keyboardType: TextInputType.number,
-      onSaved: (newValue) => itemName = newValue!,
+      onSaved: (newValue) => productPrice = double.parse(newValue!),
       onChanged: (value) {
         if (value.isNotEmpty) {
-          removeError(error: "Please Enter Item Price");
+          removeError(error: "Please Enter Product Price");
         }
         return null;
       },
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: "Please Enter Item Price");
+          addError(error: "Please Enter Product Price");
           return "";
         }
         return null;
@@ -188,7 +198,7 @@ class _UploadFormState extends State<UploadForm> {
     );
   }
 
-  Widget buildCategories(List<Type> categories) {
+  Widget buildCategories(List<Type?>? selectCategories) {
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
@@ -219,8 +229,10 @@ class _UploadFormState extends State<UploadForm> {
                       Padding(
                         padding: const EdgeInsets.only(left: 32),
                         child: ElevatedButton(
-                            onPressed: (){
-                              queryCategories();
+                            onPressed: () async {
+                              categories = await queryCategories();
+                              print(categories);
+                              openFilterDelegate(categories);
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: kTextColor,
@@ -233,7 +245,7 @@ class _UploadFormState extends State<UploadForm> {
                       Container(
                         height: 40,
                         child: ListView.builder(
-                            itemCount: categories.length,
+                            itemCount: selectCategories?.length,
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
@@ -248,7 +260,7 @@ class _UploadFormState extends State<UploadForm> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 8),
                                     child: Text(
-                                      categories[index].name.toString(),
+                                      selectCategories![index]!.typeName,
                                       style: TextStyle(color: kPrimaryColor),
                                     ),
                                   ),
@@ -278,7 +290,6 @@ class _UploadFormState extends State<UploadForm> {
   }
 
   Widget buildImagePicker(List<XFile> imageList) {
-   
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -350,8 +361,7 @@ class _UploadFormState extends State<UploadForm> {
                           child: GestureDetector(
                             onTap: () {
                               imageList.removeAt(index);
-                              setState(() {
-                              });
+                              setState(() {});
                             },
                             child: CustomSurffixIcon(
                               svgIcon: "assets/icons/Close.svg",
@@ -381,24 +391,24 @@ class _UploadFormState extends State<UploadForm> {
     }
   }
 
-  void openFilterDelegate() async {
-    await FilterListDelegate.show<Type>(
+  void openFilterDelegate(List<Type?> categories) async {
+    await FilterListDelegate.show<Type?>(
       context: context,
-      list: userList,
-      onItemSearch: (user, query) {
-        return user.name!.toLowerCase().contains(query.toLowerCase());
+      list: categories,
+      onItemSearch: (categories, query) {
+        return categories!.typeName.toLowerCase().contains(query.toLowerCase());
       },
-      tileLabel: (user) => user!.name,
+      tileLabel: (categories) => categories!.typeName,
       emptySearchChild: Center(child: Text('No user found')),
+      selectedListData: selectCategories,
       searchFieldHint: 'Search Here..',
       theme: FilterListDelegateThemeData(tileColor: kPrimaryColor),
-      onApplyButtonClick: (list) {},
+      onApplyButtonClick: (list) {
+        setState(() {
+          selectCategories = list!.cast<Type>();
+          print(selectCategories);
+        });
+      },
     );
   }
-}
-
-class Type {
-  final String? name;
-  final String? imageUrl;
-  Type({this.name, this.imageUrl});
 }

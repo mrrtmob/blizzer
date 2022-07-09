@@ -1,8 +1,9 @@
 {
   "api": {
-    "blizzer": {
+    "blizzershop": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
+      "dependsOn": [],
       "output": {
         "authConfig": {
           "defaultAuthentication": {
@@ -18,12 +19,11 @@
             }
           ]
         }
-      },
-      "dependsOn": []
+      }
     }
   },
   "auth": {
-    "blizzere89c5cca": {
+    "blizzershop063f0b3f": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -52,7 +52,7 @@
     }
   },
   "storage": {
-    "s3blizzerstorage3626ac2d": {
+    "s30f6f6119": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": []

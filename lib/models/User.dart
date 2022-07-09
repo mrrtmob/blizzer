@@ -19,7 +19,11 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'package:blizzer/models/Item.dart';
+
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -30,12 +34,13 @@ class User extends Model {
   final String id;
   final String? _email;
   final String? _phone;
-  final String? _lastname;
-  final String? _firstname;
-  final TemporalDate? _dateOfBirth;
+  final String? _lastName;
+  final String? _firstName;
+  final String? _dateOfBirth;
   final String? _imageUrl;
   final bool? _isAdmin;
-  final String? _userId;
+  final String? _identityId;
+  final List<Item>? _products;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -64,15 +69,15 @@ class User extends Model {
     return _phone;
   }
   
-  String? get lastname {
-    return _lastname;
+  String? get lastName {
+    return _lastName;
   }
   
-  String? get firstname {
-    return _firstname;
+  String? get firstName {
+    return _firstName;
   }
   
-  TemporalDate? get dateOfBirth {
+  String? get dateOfBirth {
     return _dateOfBirth;
   }
   
@@ -84,9 +89,9 @@ class User extends Model {
     return _isAdmin;
   }
   
-  String get userId {
+  String get identityId {
     try {
-      return _userId!;
+      return _identityId!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -97,6 +102,10 @@ class User extends Model {
     }
   }
   
+  List<Item>? get products {
+    return _products;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -105,19 +114,20 @@ class User extends Model {
     return _updatedAt;
   }
   
-  const User._internal({required this.id, required email, phone, lastname, firstname, dateOfBirth, imageUrl, isAdmin, required userId, createdAt, updatedAt}): _email = email, _phone = phone, _lastname = lastname, _firstname = firstname, _dateOfBirth = dateOfBirth, _imageUrl = imageUrl, _isAdmin = isAdmin, _userId = userId, _createdAt = createdAt, _updatedAt = updatedAt;
+  const User._internal({required this.id, required email, phone, lastName, firstName, dateOfBirth, imageUrl, isAdmin, required identityId, products, createdAt, updatedAt}): _email = email, _phone = phone, _lastName = lastName, _firstName = firstName, _dateOfBirth = dateOfBirth, _imageUrl = imageUrl, _isAdmin = isAdmin, _identityId = identityId, _products = products, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory User({String? id, required String email, String? phone, String? lastname, String? firstname, TemporalDate? dateOfBirth, String? imageUrl, bool? isAdmin, required String userId}) {
+  factory User({String? id, required String email, String? phone, String? lastName, String? firstName, String? dateOfBirth, String? imageUrl, bool? isAdmin, required String identityId, List<Item>? products}) {
     return User._internal(
       id: id == null ? UUID.getUUID() : id,
       email: email,
       phone: phone,
-      lastname: lastname,
-      firstname: firstname,
+      lastName: lastName,
+      firstName: firstName,
       dateOfBirth: dateOfBirth,
       imageUrl: imageUrl,
       isAdmin: isAdmin,
-      userId: userId);
+      identityId: identityId,
+      products: products != null ? List<Item>.unmodifiable(products) : products);
   }
   
   bool equals(Object other) {
@@ -131,12 +141,13 @@ class User extends Model {
       id == other.id &&
       _email == other._email &&
       _phone == other._phone &&
-      _lastname == other._lastname &&
-      _firstname == other._firstname &&
+      _lastName == other._lastName &&
+      _firstName == other._firstName &&
       _dateOfBirth == other._dateOfBirth &&
       _imageUrl == other._imageUrl &&
       _isAdmin == other._isAdmin &&
-      _userId == other._userId;
+      _identityId == other._identityId &&
+      DeepCollectionEquality().equals(_products, other._products);
   }
   
   @override
@@ -150,12 +161,12 @@ class User extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("email=" + "$_email" + ", ");
     buffer.write("phone=" + "$_phone" + ", ");
-    buffer.write("lastname=" + "$_lastname" + ", ");
-    buffer.write("firstname=" + "$_firstname" + ", ");
-    buffer.write("dateOfBirth=" + (_dateOfBirth != null ? _dateOfBirth!.format() : "null") + ", ");
+    buffer.write("lastName=" + "$_lastName" + ", ");
+    buffer.write("firstName=" + "$_firstName" + ", ");
+    buffer.write("dateOfBirth=" + "$_dateOfBirth" + ", ");
     buffer.write("imageUrl=" + "$_imageUrl" + ", ");
     buffer.write("isAdmin=" + (_isAdmin != null ? _isAdmin!.toString() : "null") + ", ");
-    buffer.write("userId=" + "$_userId" + ", ");
+    buffer.write("identityId=" + "$_identityId" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -163,45 +174,55 @@ class User extends Model {
     return buffer.toString();
   }
   
-  User copyWith({String? id, String? email, String? phone, String? lastname, String? firstname, TemporalDate? dateOfBirth, String? imageUrl, bool? isAdmin, String? userId}) {
+  User copyWith({String? id, String? email, String? phone, String? lastName, String? firstName, String? dateOfBirth, String? imageUrl, bool? isAdmin, String? identityId, List<Item>? products}) {
     return User._internal(
       id: id ?? this.id,
       email: email ?? this.email,
       phone: phone ?? this.phone,
-      lastname: lastname ?? this.lastname,
-      firstname: firstname ?? this.firstname,
+      lastName: lastName ?? this.lastName,
+      firstName: firstName ?? this.firstName,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       imageUrl: imageUrl ?? this.imageUrl,
       isAdmin: isAdmin ?? this.isAdmin,
-      userId: userId ?? this.userId);
+      identityId: identityId ?? this.identityId,
+      products: products ?? this.products);
   }
   
   User.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
       _email = json['email'],
       _phone = json['phone'],
-      _lastname = json['lastname'],
-      _firstname = json['firstname'],
-      _dateOfBirth = json['dateOfBirth'] != null ? TemporalDate.fromString(json['dateOfBirth']) : null,
+      _lastName = json['lastName'],
+      _firstName = json['firstName'],
+      _dateOfBirth = json['dateOfBirth'],
       _imageUrl = json['imageUrl'],
       _isAdmin = json['isAdmin'],
-      _userId = json['userId'],
+      _identityId = json['identityId'],
+      _products = json['products'] is List
+        ? (json['products'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Item.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'email': _email, 'phone': _phone, 'lastname': _lastname, 'firstname': _firstname, 'dateOfBirth': _dateOfBirth?.format(), 'imageUrl': _imageUrl, 'isAdmin': _isAdmin, 'userId': _userId, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'phone': _phone, 'lastName': _lastName, 'firstName': _firstName, 'dateOfBirth': _dateOfBirth, 'imageUrl': _imageUrl, 'isAdmin': _isAdmin, 'identityId': _identityId, 'products': _products?.map((Item? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField PHONE = QueryField(fieldName: "phone");
-  static final QueryField LASTNAME = QueryField(fieldName: "lastname");
-  static final QueryField FIRSTNAME = QueryField(fieldName: "firstname");
+  static final QueryField LASTNAME = QueryField(fieldName: "lastName");
+  static final QueryField FIRSTNAME = QueryField(fieldName: "firstName");
   static final QueryField DATEOFBIRTH = QueryField(fieldName: "dateOfBirth");
   static final QueryField IMAGEURL = QueryField(fieldName: "imageUrl");
   static final QueryField ISADMIN = QueryField(fieldName: "isAdmin");
-  static final QueryField USERID = QueryField(fieldName: "userId");
+  static final QueryField IDENTITYID = QueryField(fieldName: "identityId");
+  static final QueryField PRODUCTS = QueryField(
+    fieldName: "products",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Item).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -246,7 +267,7 @@ class User extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: User.DATEOFBIRTH,
       isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
@@ -262,9 +283,16 @@ class User extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: User.USERID,
+      key: User.IDENTITYID,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: User.PRODUCTS,
+      isRequired: false,
+      ofModelName: (Item).toString(),
+      associatedKey: Item.USERID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

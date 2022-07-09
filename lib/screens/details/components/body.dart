@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:blizzer/components/default_button.dart';
-import 'package:blizzer/models/Product.dart';
+import 'package:blizzer/models/ProductModel.dart';
 import 'package:blizzer/size_config.dart';
 
 import 'color_dots.dart';

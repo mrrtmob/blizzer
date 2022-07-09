@@ -19,7 +19,6 @@
 
 // ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -30,15 +29,14 @@ import 'package:flutter/foundation.dart';
 class Item extends Model {
   static const classType = const _ItemModelType();
   final String id;
-  final String? _name;
+  final String? _productName;
   final double? _price;
   final String? _description;
   final List<String>? _imageUrl;
-  final User? _uploadBy;
-  final List<ItemType>? _types;
+  final String? _userID;
+  final List<String>? _types;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _itemUploadById;
 
   @override
   getInstanceType() => classType;
@@ -48,9 +46,9 @@ class Item extends Model {
     return id;
   }
   
-  String get name {
+  String get productName {
     try {
-      return _name!;
+      return _productName!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -78,13 +76,9 @@ class Item extends Model {
     return _description;
   }
   
-  List<String>? get imageUrl {
-    return _imageUrl;
-  }
-  
-  User get uploadBy {
+  List<String> get imageUrl {
     try {
-      return _uploadBy!;
+      return _imageUrl!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -95,8 +89,30 @@ class Item extends Model {
     }
   }
   
-  List<ItemType>? get types {
-    return _types;
+  String get userID {
+    try {
+      return _userID!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  List<String> get types {
+    try {
+      return _types!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -107,31 +123,17 @@ class Item extends Model {
     return _updatedAt;
   }
   
-  String get itemUploadById {
-    try {
-      return _itemUploadById!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
+  const Item._internal({required this.id, required productName, required price, description, required imageUrl, required userID, required types, createdAt, updatedAt}): _productName = productName, _price = price, _description = description, _imageUrl = imageUrl, _userID = userID, _types = types, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Item._internal({required this.id, required name, required price, description, imageUrl, required uploadBy, types, createdAt, updatedAt, required itemUploadById}): _name = name, _price = price, _description = description, _imageUrl = imageUrl, _uploadBy = uploadBy, _types = types, _createdAt = createdAt, _updatedAt = updatedAt, _itemUploadById = itemUploadById;
-  
-  factory Item({String? id, required String name, required double price, String? description, List<String>? imageUrl, required User uploadBy, List<ItemType>? types, required String itemUploadById}) {
+  factory Item({String? id, required String productName, required double price, String? description, required List<String> imageUrl, required String userID, required List<String> types}) {
     return Item._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name,
+      productName: productName,
       price: price,
       description: description,
       imageUrl: imageUrl != null ? List<String>.unmodifiable(imageUrl) : imageUrl,
-      uploadBy: uploadBy,
-      types: types != null ? List<ItemType>.unmodifiable(types) : types,
-      itemUploadById: itemUploadById);
+      userID: userID,
+      types: types != null ? List<String>.unmodifiable(types) : types);
   }
   
   bool equals(Object other) {
@@ -143,13 +145,12 @@ class Item extends Model {
     if (identical(other, this)) return true;
     return other is Item &&
       id == other.id &&
-      _name == other._name &&
+      _productName == other._productName &&
       _price == other._price &&
       _description == other._description &&
       DeepCollectionEquality().equals(_imageUrl, other._imageUrl) &&
-      _uploadBy == other._uploadBy &&
-      DeepCollectionEquality().equals(_types, other._types) &&
-      _itemUploadById == other._itemUploadById;
+      _userID == other._userID &&
+      DeepCollectionEquality().equals(_types, other._types);
   }
   
   @override
@@ -161,65 +162,52 @@ class Item extends Model {
     
     buffer.write("Item {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("name=" + "$_name" + ", ");
+    buffer.write("productName=" + "$_productName" + ", ");
     buffer.write("price=" + (_price != null ? _price!.toString() : "null") + ", ");
     buffer.write("description=" + "$_description" + ", ");
     buffer.write("imageUrl=" + (_imageUrl != null ? _imageUrl!.toString() : "null") + ", ");
+    buffer.write("userID=" + "$_userID" + ", ");
+    buffer.write("types=" + (_types != null ? _types!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("itemUploadById=" + "$_itemUploadById");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Item copyWith({String? id, String? name, double? price, String? description, List<String>? imageUrl, User? uploadBy, List<ItemType>? types, String? itemUploadById}) {
+  Item copyWith({String? id, String? productName, double? price, String? description, List<String>? imageUrl, String? userID, List<String>? types}) {
     return Item._internal(
       id: id ?? this.id,
-      name: name ?? this.name,
+      productName: productName ?? this.productName,
       price: price ?? this.price,
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
-      uploadBy: uploadBy ?? this.uploadBy,
-      types: types ?? this.types,
-      itemUploadById: itemUploadById ?? this.itemUploadById);
+      userID: userID ?? this.userID,
+      types: types ?? this.types);
   }
   
   Item.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _name = json['name'],
+      _productName = json['productName'],
       _price = (json['price'] as num?)?.toDouble(),
       _description = json['description'],
       _imageUrl = json['imageUrl']?.cast<String>(),
-      _uploadBy = json['uploadBy']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['uploadBy']['serializedData']))
-        : null,
-      _types = json['types'] is List
-        ? (json['types'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => ItemType.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
+      _userID = json['userID'],
+      _types = json['types']?.cast<String>(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _itemUploadById = json['itemUploadById'];
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'price': _price, 'description': _description, 'imageUrl': _imageUrl, 'uploadBy': _uploadBy?.toJson(), 'types': _types?.map((ItemType? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'itemUploadById': _itemUploadById
+    'id': id, 'productName': _productName, 'price': _price, 'description': _description, 'imageUrl': _imageUrl, 'userID': _userID, 'types': _types, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "item.id");
-  static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField PRODUCTNAME = QueryField(fieldName: "productName");
   static final QueryField PRICE = QueryField(fieldName: "price");
   static final QueryField DESCRIPTION = QueryField(fieldName: "description");
   static final QueryField IMAGEURL = QueryField(fieldName: "imageUrl");
-  static final QueryField UPLOADBY = QueryField(
-    fieldName: "uploadBy",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField TYPES = QueryField(
-    fieldName: "types",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (ItemType).toString()));
-  static final QueryField ITEMUPLOADBYID = QueryField(fieldName: "itemUploadById");
+  static final QueryField USERID = QueryField(fieldName: "userID");
+  static final QueryField TYPES = QueryField(fieldName: "types");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Item";
     modelSchemaDefinition.pluralName = "Items";
@@ -238,7 +226,7 @@ class Item extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Item.NAME,
+      key: Item.PRODUCTNAME,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
@@ -257,23 +245,22 @@ class Item extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Item.IMAGEURL,
-      isRequired: false,
+      isRequired: true,
       isArray: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
-      key: Item.UPLOADBY,
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Item.USERID,
       isRequired: true,
-      ofModelName: (User).toString(),
-      associatedKey: User.ID
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Item.TYPES,
-      isRequired: false,
-      ofModelName: (ItemType).toString(),
-      associatedKey: ItemType.ITEM
+      isRequired: true,
+      isArray: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.string))
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -288,12 +275,6 @@ class Item extends Model {
       isRequired: false,
       isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Item.ITEMUPLOADBYID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

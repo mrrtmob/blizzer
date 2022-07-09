@@ -1,13 +1,8 @@
 import 'package:blizzer/auth/check_signin.dart';
-import 'package:blizzer/auth/sign_out.dart';
-import 'package:blizzer/configureAmplify.dart';
 import 'package:blizzer/constants.dart';
 import 'package:blizzer/screens/home/home_screen.dart';
 import 'package:blizzer/screens/sign_in/sign_in_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:blizzer/models/Product.dart';
+import 'package:blizzer/models/ProductModel.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -28,7 +28,7 @@ class _ProductImagesState extends State<ProductImages> {
             aspectRatio: 1,
             child: Hero(
               tag: widget.product.id.toString(),
-              child: Image.asset(widget.product.images[selectedImage]),
+              child:Image(image: NetworkImage("https://blizzershop0cb159ef4be549d397297934ef00336b33143-dev.s3.ap-southeast-1.amazonaws.com/public/${widget.product.images[selectedImage]}")),
             ),
           ),
         ),
@@ -63,7 +63,7 @@ class _ProductImagesState extends State<ProductImages> {
           border: Border.all(
               color: kPrimaryColor.withOpacity(selectedImage == index ? 1 : 0)),
         ),
-        child: Image.asset(widget.product.images[index]),
+        child: Image(image: NetworkImage("https://blizzershop0cb159ef4be549d397297934ef00336b33143-dev.s3.ap-southeast-1.amazonaws.com/public/${widget.product.images[index]}")),
       ),
     );
   }

@@ -1,0 +1,29 @@
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  email: String!
+  phone: String
+  lastName: String
+  firstName: String
+  dateOfBirth: String
+  imageUrl: String
+  isAdmin: Boolean
+  identityId: String!
+  products: [Item] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Item @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  productName: String!
+  price: Float!
+  description: String
+  imageUrl: [String!]!
+  userID: ID! @index(name: "byUser")
+  types: [ID!]!
+}
+
+type Type @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  typeName: String!
+  imageUrl: String!
+}
+a

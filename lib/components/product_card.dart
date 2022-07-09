@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:blizzer/models/Product.dart';
+import 'package:blizzer/models/ProductModel.dart';
 import 'package:blizzer/screens/details/details_screen.dart';
 
 import '../constants.dart';
@@ -42,7 +42,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   child: Hero(
                     tag: product.id.toString(),
-                    child: Image.asset(product.images[0]),
+                    child: Image(image: NetworkImage("https://blizzershop0cb159ef4be549d397297934ef00336b33143-dev.s3.ap-southeast-1.amazonaws.com/public/${product.images[0]}")),
                   ),
                 ),
               ),
